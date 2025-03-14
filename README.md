@@ -1,4 +1,4 @@
-# Spring Boot OAuth2 Authorization Code Flow Demo
+# Spring Boot OAuth2 Authorization Code Flow Example
 
 This project demonstrates the OAuth2 Authorization Code Flow using Spring Boot 3. It consists of two applications:
 
