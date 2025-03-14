@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorization Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .code-display {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        .actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .error-message {
+            color: #d32f2f;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Authorization Confirmation</h2>
+    </div>
+
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}">Error message here</p>
+    </div>
+
+    <div th:unless="${error}">
+        <p>You have received the following authorization code:</p>
+
+        <div class="code-display" th:text="${authorizationCode}">
+            authorization_code_placeholder
+        </div>
+
+        <p>Would you like to exchange this authorization code for an access token?</p>
+
+        <form th:action="@{/exchange-token}" method="post">
+            <input type="hidden" name="authorizationCode" th:value="${authorizationCode}" />
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Yes, Exchange for Token</button>
+                <button type="button" class="btn btn-secondary">No, Cancel</button>
+            </div>
+        </form>
+
+        <p th:if="${timeRemaining}" class="time-info">
+            This authorization code will expire in <span th:text="${timeRemaining}">10 minutes</span>.
+        </p>
+    </div>
+</div>
+</body>
+</html>

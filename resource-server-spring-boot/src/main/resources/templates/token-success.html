@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Generated Successfully</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .token-display {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 15px 0;
+            word-break: break-all;
+            font-size: 14px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .success-message {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        .token-info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .copy-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .copy-message {
+            color: #2e7d32;
+            background-color: #e8f5e9;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+            font-weight: bold;
+            border-left: 4px solid #2e7d32;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Token Generated</h2>
+    </div>
+
+    <div class="success-message">
+        <p>Your authorization code has been successfully exchanged for an access token!</p>
+    </div>
+
+    <p>Your access token:</p>
+
+    <div class="token-display" id="tokenText" th:text="${token}">
+        token_placeholder
+    </div>
+
+    <button class="copy-btn" onclick="copyToken()">Copy Token</button>
+    <div id="copyMessage" class="copy-message">Token copied to clipboard!</div>
+
+    <div class="token-info">
+        <p>Please store this token securely. You will need it for authenticated API requests.</p>
+        <p>To use this token, include it in the Authorization header of your requests:</p>
+        <div class="token-display">
+            Authorization: Bearer <span th:text="${token}">token_placeholder</span>
+        </div>
+    </div>
+
+    <a href="/" class="home-btn">Return to Home</a>
+</div>
+
+<script>
+        function copyToken() {
+            const tokenText = document.getElementById('tokenText');
+            const textArea = document.createElement('textarea');
+            textArea.value = tokenText.textContent.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            // Show green message
+            const message = document.getElementById('copyMessage');
+            message.style.display = 'block';
+
+            // Hide the message after 3 seconds
+            setTimeout(function() {
+                message.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
