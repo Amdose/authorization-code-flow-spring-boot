@@ -23,21 +23,6 @@ import java.util.Base64;
 @Controller
 public class OAuth2AuthorizationFlowController {
 
-    @Value("${spring.security.oauth2.resource-server.jwt.issuer-uri}")
-    private String authorizationServerBaeUrl;
-
-    @Value("${oauth2.authorization-server.endpoint}")
-    private String tokenEndpoint;
-
-    @Value("${oauth2.resource-server.client.id}")
-    private String clientId;
-
-    @Value("${oauth2.resource-server.client.secret}")
-    private String clientSecret;
-
-    @Value("${oauth2.resource-server.client.redirect.uri}")
-    private String redirectUri;
-
     @GetMapping("/auth-confirmation")
     public String showAuthConfirmation(@RequestParam(required = false) String code, Model model) {
         if (code == null || code.isEmpty()) {
@@ -68,12 +53,6 @@ public class OAuth2AuthorizationFlowController {
         }
     }
 
-    @GetMapping("/cancel")
-    public String cancelExchange() {
-        // Handle cancellation logic
-        return "redirect:/"; // Redirect to home or wherever appropriate
-    }
-
 
     private String exchangeCodeForToken(String authorizationCode) {
         // Implementation to exchange code for token
@@ -82,7 +61,7 @@ public class OAuth2AuthorizationFlowController {
         // Example with RestTemplate:
         RestTemplate restTemplate = new RestTemplate();
 
-        String credentials = clientId + ":" + clientSecret;
+        String credentials = "custom-client-id" + ":" + "custom-client-secret";
         String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
         HttpHeaders headers = new HttpHeaders();
@@ -92,12 +71,12 @@ public class OAuth2AuthorizationFlowController {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "authorization_code");
         requestBody.add("code", authorizationCode);
-        requestBody.add("redirect_uri", redirectUri);
+        requestBody.add("redirect_uri", "http://localhost:8080/resource-server/auth-confirmation");
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<TokenResponse> response = restTemplate.postForEntity(
-                authorizationServerBaeUrl + tokenEndpoint, requestEntity, TokenResponse.class);
+                "http://localhost:9090/authorization-server/oauth2/token", requestEntity, TokenResponse.class);
 
         return response.getBody().getAccessToken();
     }

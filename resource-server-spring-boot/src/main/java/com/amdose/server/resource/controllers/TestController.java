@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Amdose Team
  */
 @RestController
-@RequestMapping("test")
 public class TestController {
 
-    @GetMapping("/worked")
+    @GetMapping("/test/worked")
     public String test() {
         return "It Worked!";
     }
